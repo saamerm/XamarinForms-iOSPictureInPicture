@@ -13,17 +13,9 @@ namespace Sample.iOS
 {
     public class MainPageRenderer : PageRenderer, IAVPictureInPictureControllerDelegate
     {
-        public MainPageRenderer()
-        {
-        }
-
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
-            //UIDevice.CurrentDevice.SetValueForKey(NSNumber.FromNInt((int)(UIInterfaceOrientation.LandscapeRight)), new NSString("orientation"));
-            //var options = NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Initial;
-
-            //statusObserver = Player.AddObserver("currentItem.status", options, ObserveCurrentItemStatus);
 
             PlayerView.PlayerLayer.Player = Player;
 
@@ -31,14 +23,11 @@ namespace Sample.iOS
             SetupPictureInPicturePlayback();
 
         }
-        IDisposable statusObserver;
 
         public override void ViewDidDisappear(bool animated)
         {
             base.ViewWillDisappear(animated);
             Player.Pause();
-            //statusObserver.Dispose();
-
         }
 
         // Attempt to load and test these asset keys before playing
@@ -63,9 +52,10 @@ namespace Sample.iOS
         {
             get
             {
-                //var x = Xamarin.Forms.Platform.iOS.VisualElementRenderer<VisualElement>;
                 try
                 {
+                    // Not able to get Player View from Xamarin Forms yet, as it provides me with a Xamarin Forms
+                    // view that cannot be converted to PlayerView format, so this is my work around.
                     return (PlayerView)View.Subviews[1];
                 }
                 catch
@@ -111,8 +101,6 @@ namespace Sample.iOS
         {
             var movieURL = new NSUrl("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4");
 
-            //			var movieURL = new NSUrl("https://stream.321tag.com/live/408b16d2-1f33-46c2-85d9-95b0cbd74426_231.m3u8");
-
             var asset = new AVUrlAsset(movieURL, (AVUrlAssetOptions)null);
 
             // Create a new `AVPlayerItem` and make it our player's current item.
@@ -141,136 +129,11 @@ namespace Sample.iOS
 
                 pictureInPictureController = new AVPictureInPictureController(layer);
                 pictureInPictureController.Delegate = this;
-                //pictureInPictureController.AddObserver(this, "pictureInPicturePossible", NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Initial, IntPtr.Zero);
             }
             else
             {
-                //PictureInPictureButton.Enabled = false;
+                // No Picture in Picture is enabled
             }
         }
-
-        //[Outlet]
-        //UIBarButtonItem PictureInPictureButton { get; set; }
-
-
-        //[Outlet]
-        //UIToolbar Toolbar { get; set; }
-
-        //[Outlet("pictureInPictureActiveLabel")]
-        //UILabel PictureInPictureActiveLabel { get; set; }
-
-        //[Action("togglePictureInPictureMode:")]
-        //void togglePictureInPictureMode(UIButton sender)
-        //{
-        //    // Toggle picture in picture mode.
-        //    // If active, stop picture in picture and return to inline playback.
-        //    // If not active, initiate picture in picture.
-        //    // Both these calls will trigger delegate callbacks which should be used
-        //    // to set up UI appropriate to the state of the application.
-        //    if (pictureInPictureController.PictureInPictureActive)
-        //        pictureInPictureController.StopPictureInPicture();
-        //    else
-        //        pictureInPictureController.StartPictureInPicture();
-        //}
-
-        //[Export("pictureInPictureControllerDidStartPictureInPicture:")]
-        //public void DidStartPictureInPicture(AVPictureInPictureController pictureInPictureController)
-        //{
-        //    // If your application contains a video library or other interesting views,
-        //    // this delegate callback can be used to dismiss player view controller
-        //    // and to present the user with a selection of videos to play next.
-        //    //PictureInPictureActiveLabel.Hidden = false;
-        //    //Toolbar.Hidden = true;
-        //}
-
-        //[Export("pictureInPictureControllerWillStopPictureInPicture:")]
-        //public void WillStopPictureInPicture(AVPictureInPictureController pictureInPictureController)
-        //{
-        //    // Picture in picture mode will stop soon, hide the active label and show the toolbar.
-        //    //PictureInPictureActiveLabel.Hidden = true;
-        //    //Toolbar.Hidden = false;
-        //}
-
-        //[Export("pictureInPictureControllerFailedToStartPictureInPicture:withError:")]
-        //public void FailedToStartPictureInPicture(AVPictureInPictureController pictureInPictureController, NSError error)
-        //{
-        //    // Picture in picture failed to start with an error, restore UI to continue
-        //    // inline playback. Hide the active label and show the toolbar.
-        //    //PictureInPictureActiveLabel.Hidden = true;
-        //    //Toolbar.Hidden = false;
-        //    HandleError(error);
-        //}
-
-        //void ObserveCurrentItemStatus(NSObservedChange change)
-        //{
-        //    // Display an error if status becomes Failed
-        //    var newStatusAsNumber = change.NewValue as NSNumber;
-        //    AVPlayerItemStatus newStatus = (newStatusAsNumber != null)
-        //        ? (AVPlayerItemStatus)newStatusAsNumber.Int32Value
-        //        : AVPlayerItemStatus.Unknown;
-
-        //    if (newStatus == AVPlayerItemStatus.Failed)
-        //    {
-        //        HandleError(Player.CurrentItem.Error);
-        //    }
-        //    else if (newStatus == AVPlayerItemStatus.ReadyToPlay)
-        //    {
-        //        var asset = Player.CurrentItem != null ? Player.CurrentItem.Asset : null;
-        //        if (asset != null)
-        //        {
-
-        //            // First test whether the values of `assetKeysRequiredToPlay` we need
-        //            // have been successfully loaded.
-        //            foreach (var key in assetKeysRequiredToPlay)
-        //            {
-        //                NSError error;
-        //                if (asset.StatusOfValue(key, out error) == AVKeyValueStatus.Failed)
-        //                {
-        //                    HandleError(error);
-        //                    return;
-        //                }
-        //            }
-
-        //            if (!asset.Playable || asset.ProtectedContent)
-        //            {
-        //                // We can't play this asset.
-        //                HandleError(null);
-        //                return;
-        //            }
-
-        //            // The player item is ready to play,
-        //            // setup picture in picture.
-        //            //SetupPictureInPicturePlayback();
-        //        }
-        //    }
-        //}
-
-        //public override void ObserveValue(NSString keyPath, NSObject ofObject, NSDictionary change, IntPtr context)
-        //{
-        //    if (context != IntPtr.Zero)
-        //    {
-        //        base.ObserveValue(keyPath, ofObject, change, context);
-        //        return;
-        //    }
-
-        //    var ch = new NSObservedChange(change);
-
-        //    if (keyPath == "pictureInPicturePossible")
-        //    {
-        //        // Enable the `PictureInPictureButton` only if `PictureInPicturePossible`
-        //        // is true. If this returns false, it might mean that the application
-        //        // was not configured as shown in the AppDelegate.
-
-        //        //PictureInPictureButton.Enabled = ((NSNumber)ch.NewValue).BoolValue;
-        //    }
-        //}
-        //void HandleError(NSError error)
-        //{
-        //    string message = error != null ? error.LocalizedDescription : string.Empty;
-        //    var alertController = UIAlertController.Create("Error", message, UIAlertControllerStyle.Alert);
-        //    var alertAction = UIAlertAction.Create("OK", UIAlertActionStyle.Default, null);
-        //    alertController.AddAction(alertAction);
-        //    PresentViewController(alertController, true, null);
-        //}
     }
 }
