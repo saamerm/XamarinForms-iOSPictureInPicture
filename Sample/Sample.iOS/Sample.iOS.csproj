@@ -68,8 +68,7 @@
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MainPageRenderer.cs" />
-    <Compile Include="PlayerView.cs" />
+    <Compile Include="VideoPlayerRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
